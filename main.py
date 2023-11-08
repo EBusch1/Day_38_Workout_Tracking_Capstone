@@ -1,8 +1,11 @@
 import requests
 import datetime
+import os
 
 # Nutritionix API info
-
+APP_ID = os.environ.get('APP_ID')
+API_KEY = os.environ.get('API_KEY')
+HEADER_AUTH = {'Authorization': os.environ.get('HEADER_AUTH')}
 
 # Physical Characteristics
 GENDER = 'male'
@@ -17,7 +20,6 @@ nutrix_header = {
     'Content-Type': 'application/json'
 }
 
-# nutrix parameters - only query is required
 nutrix_params = {
     'query': input("Tell me what exercises you did: "),
     'gender': GENDER,
@@ -28,7 +30,7 @@ nutrix_params = {
 
 # endpoints
 nutrix_endpoint = 'https://trackapi.nutritionix.com/v2/natural/exercise'
-sheety_endpoint = 'https://api.sheety.co/c03ff789ef50eb41a3778adf9d64f297/myWorkouts/workouts'
+sheety_endpoint = os.environ.get('SHEETY_ENDPOINT')
 
 # making request
 log_exercise = requests.post(headers=nutrix_header, url=nutrix_endpoint, json=nutrix_params)
@@ -43,11 +45,9 @@ today = now.strftime("%d/%m/%Y")
 time = now.strftime("%H:%M:%S")
 
 for activity in exercise_details['exercises']:
-
     exercise = activity['user_input'].title()
     duration = activity['duration_min']
     calories = activity['nf_calories']
-
 
     # sheety parameters
     sheety_params = {
@@ -63,4 +63,3 @@ for activity in exercise_details['exercises']:
     update_sheet = requests.post(headers=HEADER_AUTH, url=sheety_endpoint, json=sheety_params)
     update_sheet.raise_for_status()
     print(update_sheet.json())
-
