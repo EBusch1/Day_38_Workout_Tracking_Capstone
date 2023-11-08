@@ -2,8 +2,7 @@ import requests
 import datetime
 
 # Nutritionix API info
-APP_ID = ''
-API_KEY = ''
+
 
 # Physical Characteristics
 GENDER = 'male'
@@ -61,7 +60,7 @@ for activity in exercise_details['exercises']:
         }
     }
 
-    update_sheet = requests.post(url=sheety_endpoint, json=sheety_params)
+    update_sheet = requests.post(headers=HEADER_AUTH, url=sheety_endpoint, json=sheety_params)
     update_sheet.raise_for_status()
     print(update_sheet.json())
 
